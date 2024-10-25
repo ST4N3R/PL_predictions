@@ -3,24 +3,17 @@ from bs4 import BeautifulSoup
 import time
 import logging
 from typing import Optional
+from src.setup_logging import setup_logging
 
 class PageScrapper:
     def __init__(self):
-        self._setup_logging()
+        self.logger = setup_logging()
 
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
 
         self.soup = None
-
-
-    def _setup_logging(self) -> None:
-        logging.basicConfig(
-            level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
-        self.logger = logging.getLogger(self.__class__.__name__)
 
 
     def _make_request(self, url: str, delay: int) -> Optional[BeautifulSoup]:
