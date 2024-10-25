@@ -1,4 +1,3 @@
-import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from typing import Optional
@@ -40,9 +39,6 @@ class TableScrapper:
 
             return rows
         
-        except requests.exceptions.RequestException as e:
-            self.logger.error(e)
-            return None
         except Exception as e:
             self.logger.error(e)
             return None

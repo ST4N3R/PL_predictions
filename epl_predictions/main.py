@@ -1,9 +1,6 @@
 from src.data.table_scrapper import TableScrapper
+from src.data.page_scrapper import PageScrapper
 
 
-currtable = TableScrapper()
-# curr_df = currtable.get_current_table()
-# currtable.save_table(curr_df, "current_table")
-
-prev_df = currtable.get_previous_tables()
-currtable.save_table(prev_df, "previous_tables")
+ps = PageScrapper()
+res = ps.get_page_html("https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures")
