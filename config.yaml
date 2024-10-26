@@ -1,0 +1,26 @@
+name: "EPL_predictor"
+description: "Machine Learning model for predicting English Premier League winners using historical Fbref data, current standings, and fixture data. Processed with Spark and stored in Azure."
+settings:
+  language: python
+  python_version: "3.12.3"
+dependencies:
+  - beautifulsoup4>=4.12.3
+  - matplotlib>=3.9.2
+  - numpy>=2.1.2
+  - pandas>=2.2.3
+  - pyspark>=3.5.3
+  - pytest>=8.3.3
+  - requests>=2.32.3
+  - scikit-learn>=1.5.2
+  - scipy>=1.14.1
+  - seaborn>=0.13.2
+directories:
+  src: "./src"
+  data: "src/data"
+  models: "src/models"
+  features: "src/features"
+  notebooks: "./notebooks"
+  tests: "./tests"
+data_directories:
+  raw: "./data/raw"
+  processed: "./data/processed"
