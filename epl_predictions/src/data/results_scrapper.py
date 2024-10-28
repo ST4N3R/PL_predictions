@@ -1,6 +1,7 @@
 import pandas as pd
+import numpy as np
 from typing import Optional
-from src.data.page_scrapper import PageScrapper
+from epl_predictions.src.client.page_scrapper import PageScrapper
 from src.setup_logging import setup_logging
 
 

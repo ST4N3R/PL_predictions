@@ -18,7 +18,7 @@ directories:
   src: "./src"
   data: "src/data"
   models: "src/models"
-  features: "src/features"
+  preprocessing: "src/preprocessing"
   notebooks: "./notebooks"
   tests: "./tests"
 data_directories:
