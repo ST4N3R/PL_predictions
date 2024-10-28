@@ -1,8 +1,9 @@
 import pandas as pd
-import numpy as np
-from typing import Optional
-from epl_predictions.src.client.page_scrapper import PageScrapper
+from bs4 import BeautifulSoup
+from src.data.page_scrapper import PageScrapper
+from src.client.page_connector import PageConnector
 from src.setup_logging import setup_logging
+from src.config.config import URL_BEGGINING, DATA_PATH
 
 
 class ResultsScrapper:
@@ -10,8 +11,8 @@ class ResultsScrapper:
         self.logger = setup_logging()
 
         self.next_fixtures_df = None
-        self.result_prev_seasons_df = None
-        self.result_curr_season_df = None
+        self.results_previous_seasons_df = None
+        self.results_current_season_df = None
 
 
     def _remove_all_null_rows(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -34,67 +35,102 @@ class ResultsScrapper:
         return df
 
 
-    def _split_reusults_fixtures(self, df: pd.DataFrame) -> None:
-        try:
-            self.next_fixtures_df = df[df['Score'].isna()]
+    def _scrapp_match_report_link(self, df: pd.DataFrame, soup: BeautifulSoup) -> list:
+        links = []
+        td_match_report = soup.select('td[data-stat="match_report"]')
 
-            self.result_curr_season_df = df[~df['Score'].isna()]
-            self.result_curr_season_df['Season'] = "2024-2025"
+        for td in td_match_report:
+            link = td.a
 
-            self.logger.info("Current season data split into results and fixture still to be played")
-        except Exception as e:
-            self.logger.error(e)
+            if link == None:
+                continue
+
+            links.append(URL_BEGGINING + link['href'])
+        
+        df['March Report'] = links
+        return df
 
 
-    def _format_fixtures_df(self, df: pd.DataFrame, ps: PageScrapper) -> pd.DataFrame:
+    def _preprocess_fixtures_df(self, df: pd.DataFrame, soup: BeautifulSoup) -> pd.DataFrame:
         df = self._remove_all_null_rows(df)
         df = self._change_xG_columns_names(df)
-
-        links = ps.get_match_report_link()
-        df['Match Report'] = links
+        df = self._scrapp_match_report_link(df, soup)
 
         return df
 
 
-    def get_next_fixtures(self) -> Optional[pd.DataFrame]:
-        url = "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures"
+    def _extract_fixtures(self, url: str, table_id: str) -> pd.DataFrame:
+        page_connector = PageConnector(url)
+        page = page_connector.get_page()
+
+        page_scrapper = PageScrapper(page, table_id)
+        df = page_scrapper.get_table_as_dataframe()
+
+        df = self._preprocess_fixtures_df(df, page)
+
+        return df
+
+
+    def _split_reusults_and_fixtures(self, df: pd.DataFrame) -> None:
+        try:
+            self.next_fixtures_df = df[df['Score'].isna()]
+            self.next_fixtures_df = self.next_fixtures_df.reset_index(drop=True)
+
+            self.results_current_season_df = df[~df['Score'].isna()]
+            self.results_current_season_df['Season'] = "2024-2025"
+
+            self.logger.debug("Current season data split into results and fixture still to be played")
+        except Exception as e:
+            self.logger.error(e)
+
+
+    def get_next_fixtures(self) -> pd.DataFrame:
+        url = URL_BEGGINING + "/en/comps/9/schedule/Premier-League-Scores-and-Fixtures"
         table_id = "sched_2024-2025_9_1"
 
         try:
-            pageScrapper = PageScrapper(url, table_id)
-            pageScrapper.get_page_html()
-
-            temp_df = pageScrapper.get_page_table()
-            temp_df = self._format_fixtures_df(temp_df, pageScrapper)
-
-            self._split_reusults_fixtures(temp_df)
-
-            return self.next_fixtures_df
+            temp_df = self._extract_fixtures(url, table_id)
+            self._split_reusults_and_fixtures(temp_df)
+        except TypeError:
+            self.logger.error(temp_df)
+            return pd.DataFrame()
         except Exception as e:
             self.logger.error(e)
-            return None
+            return pd.DataFrame()   
+        
+        return self.next_fixtures_df
+
+
+    def _change_seasons_to_int(self, start_season: str, end_season: str) -> list:
+        return [int(start_season[:4]), int(end_season[:4])]
+
+
+    #ToDo: Dodać walidację str
+    def _validate_season_str(self, season: str) -> bool:
+        return True
 
 
     def get_previous_fixtures(self, start_season: str="1995-1996", end_season: str="2023-2024") -> pd.DataFrame:
-        if self.result_curr_season_df == None:
+        if not self._validate_season_str(start_season):
+            return pd.DataFrame()
+        if not self._validate_season_str(end_season):
+            return pd.DataFrame()
+
+        if self.results_current_season_df == None:
             self.get_next_fixtures()
 
-        start_year = int(start_season[:4])
-        end_year = int(end_season[:4])
+        start_year, end_year = self._change_seasons_to_int(start_season, end_season)
         previous_df = pd.DataFrame()
 
         for year in range(start_year, end_year + 1):
             season = f"{year}-{str(year+1)}"
-            url = f"https://fbref.com/en/comps/9/{season}/schedule/{season}-Premier-League-Scores-and-Fixtures"
+
+            url = URL_BEGGINING + f"/en/comps/9/{season}/schedule/{season}-Premier-League-Scores-and-Fixtures"
             table_id = f"sched_{season}_9_1"
 
-            self.logger.info(f"Scraping results from {season} season")
+            self.logger.debug(f"Scraping results from {season} season")
             
-            pageScrapper = PageScrapper(url, table_id)
-            pageScrapper.get_page_html()
-
-            season_df = pageScrapper.get_page_table()
-            season_df = self._format_fixtures_df(season_df, pageScrapper)
+            season_df = self._extract_fixtures(url, table_id)
             season_df['Season'] = season
 
             try:
@@ -102,13 +138,19 @@ class ResultsScrapper:
                 self.logger.info(f"Successfuly scraped the table of {season} season")
             except pd.errors.InvalidIndexError:
                 self.logger.error("Problem with indexes in your df")
-                previous_df.to_csv(f"epl_predictions/data/raw/results.csv", index=False)
         
-        self.result_prev_seasons_df = pd.concat([previous_df, self.result_curr_season_df])
-        return self.result_prev_seasons_df
+        self.results_previous_seasons_df = pd.concat([previous_df, self.results_current_season_df])
+        self.results_previous_seasons_df = self.results_previous_seasons_df.reset_index(drop=True)
+
+        return self.results_previous_seasons_df
 
 
     def save_table(self, df: pd.DataFrame, name: str) -> None:
-        if df is not None:
-            df.to_csv(f"epl_predictions/data/raw/{name}.csv", index=False)
-            self.logger.info("Current table saved fo data/raw")
+        if df is None:
+            self.logger.error("Df is none")
+            return None
+        
+        #ToDo: Sprawdzać czy ma się dostęp oraz, czy folder istnieje
+        df = df.reset_index()
+        df.to_csv(DATA_PATH + f"raw/{name}.csv", index=False)
+        self.logger.info(f"Current table saved to {DATA_PATH}/raw")
