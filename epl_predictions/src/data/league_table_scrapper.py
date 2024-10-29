@@ -10,6 +10,9 @@ class LeagueTableScrapper:
         self.logger = setup_logging()
 
 
+    #ToDo: testy na zwrócenie odpowiednich rzeczy w PageConnector
+    #ToDp: testy na zwrócenie odpowiednich rzeczy w PageScrapper
+    #ToDo: testy na
     def _extract_league_table(self, url: str, table_id: str) -> pd.DataFrame:
         page_connector = PageConnector(url)
         page = page_connector.get_page()
@@ -29,7 +32,7 @@ class LeagueTableScrapper:
             return current_df
         except Exception as e:
             self.logger.error(e)
-            return None
+            return pd.Dataframe()
 
 
     def _change_seasons_to_int(self, start_season: str, end_season: str) -> list:

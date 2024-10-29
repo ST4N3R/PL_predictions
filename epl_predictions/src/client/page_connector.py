@@ -7,6 +7,7 @@ from src.setup_logging import setup_logging
 
 
 class PageConnector:
+    
     def __init__(self, url: str):
         self.logger = setup_logging()
 
