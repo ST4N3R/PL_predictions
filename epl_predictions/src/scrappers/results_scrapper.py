@@ -1,6 +1,6 @@
 import pandas as pd
 from bs4 import BeautifulSoup
-from src.data.page_scrapper import PageScrapper
+from src.scrappers.page_scrapper import PageScrapper
 from src.client.page_connector import PageConnector
 from src.setup_logging import setup_logging
 from src.config.config import URL_BEGGINING, DATA_PATH
@@ -101,12 +101,38 @@ class ResultsScrapper:
         return self.next_fixtures_df
 
 
-    def _change_seasons_to_int(self, start_season: str, end_season: str) -> list:
+    def _change_seasons_str_to_int(self, start_season: str, end_season: str) -> list:
         return [int(start_season[:4]), int(end_season[:4])]
 
 
-    #ToDo: Dodać walidację str
     def _validate_season_str(self, season: str) -> bool:
+        if len(season) != 9:
+            self.logger.error("Season string have too little signs")
+            return False
+        if '-' not in season:
+            self.logger.error("Season string is in wrong format")
+            return False
+        split_str = season.split('-')
+        if len(split_str) != 2:
+            self.logger.error("Season string is in wrong fomrat")
+            return False
+        try:
+            first_year = int(split_str[0])
+            if len(first_year) != 4:
+                self.logger.error("Season string is in wrong format")
+                return False
+            
+            second_year = int(split_str[1])
+            if len(second_year) != 4:
+                self.logger.error("Season string is in wrong format")
+                return False
+
+            if first_year + 1 != second_year:
+                self.logger.error("Difference between first and second year in season string should be 1")
+                return False
+        except:
+            self.logger.error("Season string is in wrong format")
+            return False
         return True
 
 
@@ -119,7 +145,7 @@ class ResultsScrapper:
         if self.results_current_season_df == None:
             self.get_next_fixtures()
 
-        start_year, end_year = self._change_seasons_to_int(start_season, end_season)
+        start_year, end_year = self._change_seasons_str_to_int(start_season, end_season)
         previous_df = pd.DataFrame()
 
         for year in range(start_year, end_year + 1):
@@ -145,12 +171,14 @@ class ResultsScrapper:
         return self.results_previous_seasons_df
 
 
-    def save_table(self, df: pd.DataFrame, name: str) -> None:
+    def save_table(self, df: pd.DataFrame, name: str) -> bool:
         if df is None:
             self.logger.error("Df is none")
-            return None
+            return False
         
         #ToDo: Sprawdzać czy ma się dostęp oraz, czy folder istnieje
         df = df.reset_index()
         df.to_csv(DATA_PATH + f"raw/{name}.csv", index=False)
         self.logger.info(f"Current table saved to {DATA_PATH}/raw")
+
+        return True

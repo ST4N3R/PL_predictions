@@ -6,7 +6,6 @@ from src.setup_logging import setup_logging
 
 class PageScrapper:
 
-    #ToDo: test, czy dane wczytują się poprawnie
     def __init__(self, soup: BeautifulSoup, table_id: str) -> None:
         self.table_id = table_id
         self.soup = soup
@@ -17,21 +16,22 @@ class PageScrapper:
         self._extract_table_from_page()
 
 
-    #ToDo: na dobry typ danych
-    #ToDo: na zwracanie odpowiedniych danych
     def _preprocess_table_data(self, tag_table: Optional[Union[Tag, NavigableString]]) -> list:
         rows = []
+
+        if tag_table == None or type(tag_table) == NavigableString:
+            return rows
+
         for row in tag_table.find_all("tr"):
             cols = row.find_all(["th", "td"])
             if cols:
                 row_data = [col.text.strip() for col in cols]
                 rows.append(row_data)
+
         return rows
 
 
-    #ToDo: test na soup None
-    #ToDo: test na nie znalezienie table
-    def _extract_table_from_page(self) -> None:
+    def _extract_table_from_page(self) -> None:        
         tag_table = self.soup.find("table", {'id': self.table_id})
 
         if tag_table is None:
@@ -40,8 +40,6 @@ class PageScrapper:
         self.table = self._preprocess_table_data(tag_table)
     
 
-    #ToDo: test na typ table
-    #ToDo: test na zwracanie odpowiednich danych
     def get_table_as_dataframe(self) -> pd.DataFrame:
         if self.table == None:
             return pd.DataFrame()

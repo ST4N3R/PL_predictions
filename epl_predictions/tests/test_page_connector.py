@@ -23,7 +23,7 @@ class TestPageConnector:
         assert connector.soup.title.string == "Test Page"
 
 
-    @patch("src.client.page_connector.requests.get", side_effect = requests.exceptions.RequestException("Failed request"))
+    @patch("src.client.page_connector.requests.get", side_effect=requests.exceptions.RequestException("Failed request"))
     def test_make_request_failure(self, mock_get):
         connector = PageConnector("http://invalid-url.com")
         assert connector.soup is None
