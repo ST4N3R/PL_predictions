@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from src.scrappers.page_scrapper import PageScrapper
 from src.client.page_connector import PageConnector
 from src.setup_logging import setup_logging
-from src.config.config import URL_BEGGINING, DATA_PATH
+from src.config.config import URL_BEGGINING, DATA_PATH, CURRENT_SEASON
 
 
 class ResultsScrapper:
@@ -39,6 +39,10 @@ class ResultsScrapper:
         links = []
         td_match_report = soup.select('td[data-stat="match_report"]')
 
+        if td_match_report == None:
+            df['Match Report'] = float('nan')
+            return df
+
         for td in td_match_report:
             link = td.a
 
@@ -47,7 +51,7 @@ class ResultsScrapper:
 
             links.append(URL_BEGGINING + link['href'])
         
-        df['March Report'] = links
+        df['Match Report'] = links
         return df
 
 
@@ -71,13 +75,15 @@ class ResultsScrapper:
         return df
 
 
-    def _split_reusults_and_fixtures(self, df: pd.DataFrame) -> None:
+    def _split_results_and_fixtures(self, df: pd.DataFrame) -> None:
+        pd.options.mode.chained_assignment = None
+
         try:
             self.next_fixtures_df = df[df['Score'].isna()]
             self.next_fixtures_df = self.next_fixtures_df.reset_index(drop=True)
 
             self.results_current_season_df = df[~df['Score'].isna()]
-            self.results_current_season_df['Season'] = "2024-2025"
+            self.results_current_season_df['Season'] = CURRENT_SEASON
 
             self.logger.debug("Current season data split into results and fixture still to be played")
         except Exception as e:
@@ -90,7 +96,7 @@ class ResultsScrapper:
 
         try:
             temp_df = self._extract_fixtures(url, table_id)
-            self._split_reusults_and_fixtures(temp_df)
+            self._split_results_and_fixtures(temp_df)
         except TypeError:
             self.logger.error(temp_df)
             return pd.DataFrame()
@@ -142,7 +148,7 @@ class ResultsScrapper:
         if not self._validate_season_str(end_season):
             return pd.DataFrame()
 
-        if self.results_current_season_df == None:
+        if type(self.results_current_season_df) == None:
             self.get_next_fixtures()
 
         start_year, end_year = self._change_seasons_str_to_int(start_season, end_season)
