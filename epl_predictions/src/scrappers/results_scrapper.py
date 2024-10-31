@@ -78,6 +78,11 @@ class ResultsScrapper:
     def _split_results_and_fixtures(self, df: pd.DataFrame) -> None:
         pd.options.mode.chained_assignment = None
 
+        # if type(df) == None:
+        #     self.next_fixtures_df = pd.DataFrame()
+        #     self.results_current_season_df = pd.DataFrame()
+        #     return None
+
         try:
             self.next_fixtures_df = df[df['Score'].isna()]
             self.next_fixtures_df = self.next_fixtures_df.reset_index(drop=True)
@@ -116,23 +121,23 @@ class ResultsScrapper:
             self.logger.error("Season string have too little signs")
             return False
         if '-' not in season:
-            self.logger.error("Season string is in wrong format")
+            self.logger.error("There is no - in string")
             return False
+        
         split_str = season.split('-')
         if len(split_str) != 2:
-            self.logger.error("Season string is in wrong fomrat")
+            self.logger.error("- is in wrong place")
+            return False
+        if len(split_str[1]) != 4:
+            self.logger.error("Second year is in wrong format")
+            return False
+        if len(split_str[0]) != 4:
+            self.logger.error("First year is in wrong format")
             return False
         try:
             first_year = int(split_str[0])
-            if len(first_year) != 4:
-                self.logger.error("Season string is in wrong format")
-                return False
-            
             second_year = int(split_str[1])
-            if len(second_year) != 4:
-                self.logger.error("Season string is in wrong format")
-                return False
-
+            
             if first_year + 1 != second_year:
                 self.logger.error("Difference between first and second year in season string should be 1")
                 return False
@@ -185,6 +190,6 @@ class ResultsScrapper:
         #ToDo: Sprawdzać czy ma się dostęp oraz, czy folder istnieje
         df = df.reset_index()
         df.to_csv(DATA_PATH + f"raw/{name}.csv", index=False)
-        self.logger.info(f"Current table saved to {DATA_PATH}/raw")
+        self.logger.info(f"Passed table saved to {DATA_PATH}/raw")
 
         return True

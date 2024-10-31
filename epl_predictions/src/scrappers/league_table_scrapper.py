@@ -29,6 +29,7 @@ class LeagueTableScrapper:
             current_df = self._extract_league_table(url, table_id)
             current_df = current_df.reset_index()
 
+            self.logger.info(f"Successfuly scraped the current league table")
             return current_df
         except Exception as e:
             self.logger.error(e)
@@ -44,23 +45,23 @@ class LeagueTableScrapper:
             self.logger.error("Season string have too little signs")
             return False
         if '-' not in season:
-            self.logger.error("Season string is in wrong format")
+            self.logger.error("There is no - in string")
             return False
+        
         split_str = season.split('-')
         if len(split_str) != 2:
-            self.logger.error("Season string is in wrong fomrat")
+            self.logger.error("- is in wrong place")
+            return False
+        if len(split_str[1]) != 4:
+            self.logger.error("Second year is in wrong format")
+            return False
+        if len(split_str[0]) != 4:
+            self.logger.error("First year is in wrong format")
             return False
         try:
             first_year = int(split_str[0])
-            if len(first_year) != 4:
-                self.logger.error("Season string is in wrong format")
-                return False
-            
             second_year = int(split_str[1])
-            if len(second_year) != 4:
-                self.logger.error("Season string is in wrong format")
-                return False
-
+            
             if first_year + 1 != second_year:
                 self.logger.error("Difference between first and second year in season string should be 1")
                 return False
@@ -88,7 +89,7 @@ class LeagueTableScrapper:
             season_df['Season'] = season
 
             previous_df = pd.concat([previous_df, season_df], ignore_index=True)
-            self.logger.debug(f"Successfuly scraped the table of {season} season")
+            self.logger.info(f"Successfuly scraped the table of {season} season")
         
         return previous_df
 

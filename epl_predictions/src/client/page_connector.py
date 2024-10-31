@@ -19,18 +19,19 @@ class PageConnector:
         self.soup = self._make_request(self.url)
 
 
-    def _make_request(self, url: str) -> Optional[BeautifulSoup]:
+    def _make_request(self, url: str) -> BeautifulSoup:
         try:
             self.logger.debug(f"Making request to: {url}")
             
+            time.sleep(5)
             response = requests.get(url, headers=self.headers)
             response.raise_for_status()
             
             return BeautifulSoup(response.text, "html.parser")
         except requests.exceptions.RequestException as e:
             self.logger.error(f"Error making request to {url}: {e}")
-            return None
+            return BeautifulSoup()
 
 
-    def get_page(self) -> Optional[BeautifulSoup]:
+    def get_page(self) -> BeautifulSoup:
         return self.soup
