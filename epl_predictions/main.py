@@ -6,9 +6,8 @@ import pandas as pd
 from src.config.config import URL_BEGGINING
 
 
-#ToDo: Fix connection problems with fbref
-#ToDo: ?Add form column
 #ToDo: ?Add form between clubs column
+#ToDo: change point format, to e,g, 15 -> "WWWWW"
 #ToDo: Add update option, to ResultsScrapper
 #ToDo: Uzupełnić NULL w xG -> na liczbę goli
 
