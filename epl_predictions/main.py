@@ -6,11 +6,11 @@ import pandas as pd
 from src.config.config import URL_BEGGINING
 
 
-#ToDo: ?Add form between clubs column
+#ToDo: result of the previous match between two teams 
 #ToDo: change point format, to e,g, 15 -> "WWWWW"
+#ToDo: create table after each matchweek, so the table can be in train data
 #ToDo: Add update option, to ResultsScrapper
-#ToDo: Uzupełnić NULL w xG -> na liczbę goli
-
+#ToDo: Add option to combine fixtures and resuls into one table
 
 """
 Oddzielny folder na część wizualną -> dwa foldery, jeden na frontend (flask lub inny framework), a drugi na na backend (skrypty na dane, obrókę oraz uczenie modelu)
