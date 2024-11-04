@@ -6,8 +6,6 @@ import pandas as pd
 from src.config.config import URL_BEGGINING
 
 
-#ToDo: result of the previous match between two teams 
-#ToDo: change point format, to e,g, 15 -> "WWWWW"
 #ToDo: create table after each matchweek, so the table can be in train data
 #ToDo: Add update option, to ResultsScrapper
 #ToDo: Add option to combine fixtures and resuls into one table
