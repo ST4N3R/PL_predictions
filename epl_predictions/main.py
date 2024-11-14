@@ -6,10 +6,7 @@ import pandas as pd
 from src.config.config import URL_BEGGINING
 
 
-#ToDo: create table after each matchweek, so the table can be in train data
-#ToDo: connect results table to previous_table
 #ToDo: Add update option, to ResultsScrapper
-#ToDo: Add option to combine fixtures and resuls into one table
 
 """
 Oddzielny folder na część wizualną -> dwa foldery, jeden na frontend (flask lub inny framework), a drugi na na backend (skrypty na dane, obrókę oraz uczenie modelu)
