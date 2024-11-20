@@ -4,6 +4,7 @@ from src.scrappers.league_table_scrapper import LeagueTableScrapper
 from src.scrappers.results_scrapper import ResultsScrapper
 import pandas as pd
 from src.config.config import DATA_PATH, LEAGUEDB_CONNECTION_STR1, LEAGUEDB_CONTAINER_NAME
+from src.azure_client.storage_connector import StorageConnector
 
 
 #ToDo: Add update option, to ResultsScrapper
@@ -35,15 +36,7 @@ Oddzielny folder na część wizualną -> dwa foldery, jeden na frontend (flask 
 
 # print(df)
 
-from azure.storage.blob import BlobServiceClient
+sc = StorageConnector()
 
-blob_service_client = BlobServiceClient.from_connection_string(LEAGUEDB_CONNECTION_STR1)
-
-container_client = blob_service_client.get_container_client(LEAGUEDB_CONTAINER_NAME)
-
-# Upload a file
-blob_name = "example.csv"
-file_path = DATA_PATH + "raw/previous_tables.csv"
-blob_client = container_client.get_blob_client(blob_name)
-with open(file_path, "rb") as data:
-    blob_client.upload_blob(data)
+container = sc.conntect_to_container("raw")
+sc.save_to_cantainer("/raw/results.csv", "results.csv", container)
