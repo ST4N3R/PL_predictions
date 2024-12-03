@@ -30,13 +30,13 @@ Oddzielny folder na część wizualną -> dwa foldery, jeden na frontend (flask 
 # url = URL_BEGGINING + "/en/comps/9/schedule/Premier-League-Scores-and-Fixtures"
 # table_id = "sched_2024-2025_9_1"
 
-# rs = ResultsScrapper()
-# df = rs.get_previous_fixtures()
-# rs.save_table(df, "results")
+rs = ResultsScrapper()
+df = rs.get_previous_fixtures()
+rs.save_table(df, "results")
 
-# print(df)
+print(df)
 
-sc = StorageConnector()
+# sc = StorageConnector()
 
-container = sc.conntect_to_container("raw")
-sc.save_to_cantainer("/raw/results.csv", "results.csv", container)
+# container = sc.conntect_to_container("raw")
+# sc.save_to_cantainer("/raw/results.csv", "results.csv", container)

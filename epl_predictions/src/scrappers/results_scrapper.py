@@ -78,11 +78,6 @@ class ResultsScrapper:
     def _split_results_and_fixtures(self, df: pd.DataFrame) -> None:
         pd.options.mode.chained_assignment = None
 
-        # if type(df) == None:
-        #     self.next_fixtures_df = pd.DataFrame()
-        #     self.results_current_season_df = pd.DataFrame()
-        #     return None
-
         try:
             self.next_fixtures_df = df[df['Score'].isna()]
             self.next_fixtures_df = self.next_fixtures_df.reset_index(drop=True)

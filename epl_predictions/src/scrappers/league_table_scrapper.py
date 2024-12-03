@@ -20,7 +20,6 @@ class LeagueTableScrapper:
         return page_scrapper.get_table_as_dataframe()
 
 
-
     def get_current_league_table(self) -> pd.DataFrame:
         url = URL_BEGGINING + "/en/comps/9/Premier-League-Stats"
         table_id = "results2024-202591_overall"
