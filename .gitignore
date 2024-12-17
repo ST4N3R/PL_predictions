@@ -31,3 +31,5 @@ wheels/
 .ipynb_checkpoints
 
 .env
+
+epl_predictions/data
