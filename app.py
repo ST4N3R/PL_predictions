@@ -1,10 +1,3 @@
-from src.client.page_connector import PageConnector
-from src.scrappers.page_scrapper import PageScrapper
-from src.scrappers.league_table_scrapper import LeagueTableScrapper
-from src.scrappers.results_scrapper import ResultsScrapper
-import pandas as pd
-from src.config.config import DATA_PATH, LEAGUEDB_CONNECTION_STR1, LEAGUEDB_CONTAINER_NAME
-from src.azure_client.storage_connector import StorageConnector
 from flask import Flask, render_template
 
 #ToDo: Add update option, to ResultsScrapper

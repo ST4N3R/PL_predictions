@@ -2,9 +2,9 @@ from unittest.mock import patch, MagicMock
 import pytest
 import pandas as pd
 from bs4 import BeautifulSoup
-from src.scrappers.page_scrapper import PageScrapper
-from src.scrappers.results_scrapper import ResultsScrapper
-from src.config.config import CURRENT_SEASON
+from epl_predictions.src.scrappers.page_scrapper import PageScrapper
+from epl_predictions.src.scrappers.results_scrapper import ResultsScrapper
+from epl_predictions.src.config.config import CURRENT_SEASON
 
 
 class TestPageScrapper:

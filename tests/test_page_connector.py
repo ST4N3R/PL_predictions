@@ -2,7 +2,7 @@ from unittest.mock import patch, Mock
 import pytest
 import requests
 from bs4 import BeautifulSoup
-from src.client.page_connector import PageConnector
+from epl_predictions.src.client.page_connector import PageConnector
 
 
 class TestPageConnector:

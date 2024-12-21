@@ -3,8 +3,8 @@ import pytest
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-from src.scrappers.page_scrapper import PageScrapper
-from src.scrappers.league_table_scrapper import LeagueTableScrapper
+from epl_predictions.src.scrappers.page_scrapper import PageScrapper
+from epl_predictions.src.scrappers.league_table_scrapper import LeagueTableScrapper
 
 
 class TestPageScrapper:
