@@ -1,8 +1,8 @@
 from azure.storage.blob.aio import ContainerClient, BlobServiceClient
 from azure.storage.blob import BlobServiceClient
 from typing import Tuple
-from src.setup_logging import setup_logging
-from src.config.config import DATA_PATH, LEAGUEDB_CONNECTION_STR1
+from ..setup_logging import setup_logging
+from ..config.config import DATA_PATH, LEAGUEDB_CONNECTION_STR1
 
 
 class StorageConnector():

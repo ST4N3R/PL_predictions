@@ -1,9 +1,9 @@
 import pandas as pd
 from typing import Tuple
-from src.scrappers.page_scrapper import PageScrapper
-from src.client.page_connector import PageConnector
-from src.setup_logging import setup_logging
-from src.config.config import URL_BEGGINING, DATA_PATH
+from ..scrappers.page_scrapper import PageScrapper
+from ..client.page_connector import PageConnector
+from ..setup_logging import setup_logging
+from ..config.config import URL_BEGGINING, DATA_PATH
 
 
 class LeagueTableScrapper:

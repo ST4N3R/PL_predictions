@@ -1,4 +1,9 @@
+import pandas as pd
 from flask import Flask, render_template
+from epl_predictions.src.scrappers.results_scrapper import ResultsScrapper
+from epl_predictions.src.scrappers.league_table_scrapper import LeagueTableScrapper
+from epl_predictions.src.utils.saver import Saver
+from epl_predictions.src.config.config import LAST_SCRAPPED_MATCH_DATE, LAST_SCRAPPED_MATCH_HOUR
 
 #ToDo: Add update option, to ResultsScrapper
 
@@ -38,7 +43,17 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    league_table_scrapper = LeagueTableScrapper()
+    saver = Saver()
+    current_league_table = league_table_scrapper.get_current_league_table()
+    matchday_league_table = pd.DataFrame()
+    final_league_table = pd.DataFrame()
+    last_update = LAST_SCRAPPED_MATCH_HOUR + " " + LAST_SCRAPPED_MATCH_DATE
+    return render_template('index.html', 
+                           last_update=last_update, 
+                           current_league_table=saver.save_table_to_html(current_league_table, ['index', 'Notes']),
+                           matchday_league_table=saver.save_table_to_html(matchday_league_table),
+                           final_league_table=saver.save_table_to_html(final_league_table))
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,9 +1,9 @@
 import pandas as pd
 from bs4 import BeautifulSoup
-from src.scrappers.page_scrapper import PageScrapper
-from src.client.page_connector import PageConnector
-from src.setup_logging import setup_logging
-from src.config.config import URL_BEGGINING, DATA_PATH, CURRENT_SEASON
+from ..scrappers.page_scrapper import PageScrapper
+from ..client.page_connector import PageConnector
+from ..setup_logging import setup_logging
+from ..config.config import URL_BEGGINING, DATA_PATH, CURRENT_SEASON
 
 
 class ResultsScrapper:
