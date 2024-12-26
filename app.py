@@ -12,6 +12,7 @@ Oddzielny folder na część wizualną -> dwa foldery, jeden na frontend (flask 
 """
 
 def test_files():
+    pass
     # url = URL_BEGGINING + "/en/comps/9/Premier-League-Stats"
     # table_id = "results2024-202591_overall"
 
@@ -28,11 +29,11 @@ def test_files():
     # url = URL_BEGGINING + "/en/comps/9/schedule/Premier-League-Scores-and-Fixtures"
     # table_id = "sched_2024-2025_9_1"
 
-    rs = ResultsScrapper()
-    df = rs.get_previous_fixtures()
-    rs.save_table(df, "results")
+    # rs = ResultsScrapper()
+    # df = rs.get_previous_fixtures()
+    # rs.save_table(df, "results")
 
-    print(df)
+    # print(df)
 
     # sc = StorageConnector()
 
@@ -43,17 +44,23 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    league_table_scrapper = LeagueTableScrapper()
+    lts = LeagueTableScrapper()
+    rs = ResultsScrapper()
     saver = Saver()
-    current_league_table = league_table_scrapper.get_current_league_table()
+
+    last_update = 0
+    # last_update = LAST_SCRAPPED_MATCH_HOUR + " " + LAST_SCRAPPED_MATCH_DATE
+    current_league_table = lts.get_current_league_table()
     matchday_league_table = pd.DataFrame()
     final_league_table = pd.DataFrame()
-    last_update = LAST_SCRAPPED_MATCH_HOUR + " " + LAST_SCRAPPED_MATCH_DATE
+    next_fixtures = rs.get_next_fixtures()
+    
     return render_template('index.html', 
                            last_update=last_update, 
                            current_league_table=saver.save_table_to_html(current_league_table, ['index', 'Notes']),
                            matchday_league_table=saver.save_table_to_html(matchday_league_table),
-                           final_league_table=saver.save_table_to_html(final_league_table))
+                           final_league_table=saver.save_table_to_html(final_league_table),
+                           next_fixtures=saver.save_table_to_html(next_fixtures))
 
 if __name__ == '__main__':
     app.run(debug=True)

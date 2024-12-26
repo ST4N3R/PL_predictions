@@ -3,43 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premier League Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>League Table Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5">Premier League Dashboard</h1>
-        <p>Data ostatniego ściągnięcia danych: {{ last_update }}</p>
-        
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="current-tab" data-toggle="tab" href="#current" role="tab" aria-controls="current" aria-selected="true">Aktualna Tabela Ligowa</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="matchday-tab" data-toggle="tab" href="#matchday" role="tab" aria-controls="matchday" aria-selected="false">Tabela Ligowa dla Aktualnie Wybranej Kolejki</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="final-tab" data-toggle="tab" href="#final" role="tab" aria-controls="final" aria-selected="false">Końcowa Tabela Ligowa</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="current-tab">
-                <h2 class="mt-3">Aktualna Tabela Ligowa</h2>
+        <h1 class="mt-5">League Table Dashboard</h1>
+        <p>Last Update: {{ last_update }}</p>
+
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Current League Table</h2>
                 <div>{{ current_league_table|safe }}</div>
-            </div>
-            <div class="tab-pane fade" id="matchday" role="tabpanel" aria-labelledby="matchday-tab">
-                <h2 class="mt-3">Tabela Ligowa dla Aktualnie Wybranej Kolejki</h2>
+
+                <h2 class="mt-3">Matchday League Table</h2>
                 <div>{{ matchday_league_table|safe }}</div>
-            </div>
-            <div class="tab-pane fade" id="final" role="tabpanel" aria-labelledby="final-tab">
-                <h2 class="mt-3">Końcowa Tabela Ligowa</h2>
+
+                <h2 class="mt-3">Final League Table</h2>
                 <div>{{ final_league_table|safe }}</div>
+            </div>
+            <div class="col-md-4">
+                <h2 class="mt-3">Upcoming Fixtures</h2>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    {% for fixture in next_fixtures %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ loop.index }}" data-toggle="tab" href="#fixture-{{ loop.index }}" role="tab" aria-controls="fixture-{{ loop.index }}" aria-selected="true">Matchday {{ loop.index }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    {% for fixture in next_fixtures %}
+                        <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="fixture-{{ loop.index }}" role="tabpanel" aria-labelledby="tab-{{ loop.index }}">
+                            {{ fixture|safe }}
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
