@@ -22,7 +22,7 @@ class Saver:
         return True
     
 
-    def save_table_to_html(self, df: pd.DataFrame, cols_to_delete: Optional[List[str]], classes: str = 'table table-striped', index: bool = False) -> str:
+    def save_table_to_html(self, df: pd.DataFrame, cols_to_delete: Optional[List[str]] = [], classes: str = 'table table-striped', index: bool = False) -> str:
         if df is None:
             self.logger.error("Df is none")
             return ""

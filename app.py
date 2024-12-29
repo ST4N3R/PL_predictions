@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from flask import Flask, render_template
 from epl_predictions.src.scrappers.results_scrapper import ResultsScrapper
 from epl_predictions.src.scrappers.league_table_scrapper import LeagueTableScrapper
@@ -53,14 +54,14 @@ def index():
     current_league_table = lts.get_current_league_table()
     matchday_league_table = pd.DataFrame()
     final_league_table = pd.DataFrame()
-    next_fixtures = rs.get_next_fixtures()
+    next_fixtures = pd.DataFrame(data=np.arange(38), columns=['Round'])
     
     return render_template('index.html', 
                            last_update=last_update, 
-                           current_league_table=saver.save_table_to_html(current_league_table, ['index', 'Notes']),
+                           current_league_table=saver.save_table_to_html(current_league_table, ['index', 'Notes', 'Pts/MP', 'xG', 'xGA', 'xGD', 'xGD/90', 'Last 5', 'Attendance', 'Top Team Scorer', 'Goalkeeper']),
                            matchday_league_table=saver.save_table_to_html(matchday_league_table),
                            final_league_table=saver.save_table_to_html(final_league_table),
-                           next_fixtures=saver.save_table_to_html(next_fixtures))
+                           fixtures=saver.save_table_to_html(next_fixtures))
 
 if __name__ == '__main__':
     app.run(debug=True)

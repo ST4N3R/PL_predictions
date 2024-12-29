@@ -1,0 +1,10 @@
+/* filepath: /C:/Users/Stanisław/Desktop/Programowanie/GitHub/PL_predictions/static/css/styles.css */
+.small-font-table {
+    font-size: 0.8em;
+}
+.compact-table tr {
+    line-height: 1;
+}
+.compact-table td, .compact-table th {
+    padding: 0.2rem;
+}
