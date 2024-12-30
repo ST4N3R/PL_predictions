@@ -31,5 +31,6 @@ wheels/
 .ipynb_checkpoints
 
 .env
+.streamlit/secrets.toml
 
 epl_predictions/data

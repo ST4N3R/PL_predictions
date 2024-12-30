@@ -7,9 +7,7 @@ from epl_predictions.src.config.config import LAST_SCRAPPED_MATCH_DATE, LAST_SCR
 
 #ToDo: Add update option, to ResultsScrapper
 
-"""
-Oddzielny folder na część wizualną -> dwa foldery, jeden na frontend (flask lub inny framework), a drugi na na backend (skrypty na dane, obrókę oraz uczenie modelu)
-"""
+# Oddzielny folder na część wizualną -> dwa foldery, jeden na frontend (flask lub inny framework), a drugi na na backend (skrypty na dane, obrókę oraz uczenie modelu)
 
 def test_files():
     pass
@@ -41,4 +39,4 @@ def test_files():
     # sc.save_to_cantainer("/raw/results.csv", "results.csv", container)
 
 
-print("pass")
+print(LAST_SCRAPPED_MATCH_DATE)
