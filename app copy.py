@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from flask import Flask, render_template
 from epl_predictions.src.scrappers.results_scrapper import ResultsScrapper
 from epl_predictions.src.scrappers.league_table_scrapper import LeagueTableScrapper
 from epl_predictions.src.utils.saver import Saver
@@ -40,5 +41,27 @@ def test_files():
     # container = sc.conntect_to_container("raw")
     # sc.save_to_cantainer("/raw/results.csv", "results.csv", container)
 
+app = Flask(__name__)
 
-print("pass")
+@app.route('/')
+def index():
+    lts = LeagueTableScrapper()
+    rs = ResultsScrapper()
+    saver = Saver()
+
+    last_update = 0
+    # last_update = LAST_SCRAPPED_MATCH_HOUR + " " + LAST_SCRAPPED_MATCH_DATE
+    current_league_table = lts.get_current_league_table()
+    matchday_league_table = pd.DataFrame()
+    final_league_table = pd.DataFrame()
+    next_fixtures = pd.DataFrame(data=np.arange(38), columns=['Round'])
+    
+    return render_template('index.html', 
+                           last_update=last_update, 
+                           current_league_table=saver.save_table_to_html(current_league_table, ['index', 'Notes', 'Pts/MP', 'xG', 'xGA', 'xGD', 'xGD/90', 'Last 5', 'Attendance', 'Top Team Scorer', 'Goalkeeper']),
+                           matchday_league_table=saver.save_table_to_html(matchday_league_table),
+                           final_league_table=saver.save_table_to_html(final_league_table),
+                           fixtures=saver.save_table_to_html(next_fixtures))
+
+if __name__ == '__main__':
+    app.run(debug=True)
