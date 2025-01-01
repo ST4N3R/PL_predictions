@@ -1,6 +1,6 @@
 import pandas as pd
 from dotenv import load_dotenv, set_key
-from ..setup_logging import setup_logging
+from ..utils.setup_logging import setup_logging
 import os
 
 

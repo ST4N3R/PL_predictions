@@ -2,7 +2,7 @@ import pandas as pd
 from typing import Tuple
 from ..scrappers.page_scrapper import PageScrapper
 from ..client.page_connector import PageConnector
-from ..setup_logging import setup_logging
+from ..utils.setup_logging import setup_logging
 from ..config.config import URL_BEGGINING, DATA_PATH
 
 

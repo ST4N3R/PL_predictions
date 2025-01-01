@@ -1,7 +1,7 @@
 from typing import Optional, Union
 from bs4 import BeautifulSoup, Tag, NavigableString, ResultSet
 import pandas as pd
-from ..setup_logging import setup_logging
+from ..utils.setup_logging import setup_logging
 
 
 class PageScrapper:

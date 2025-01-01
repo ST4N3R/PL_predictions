@@ -1,8 +1,9 @@
+import pandas as pd
 from azure.storage.blob.aio import ContainerClient, BlobServiceClient
 from azure.storage.blob import BlobServiceClient
 from typing import Tuple
-from ..setup_logging import setup_logging
-from ..config.config import DATA_PATH, LEAGUEDB_CONNECTION_STR1
+from ..utils.setup_logging import setup_logging
+from ..config.config import LEAGUEDB_CONNECTION_STR1
 
 
 class StorageConnector():
@@ -25,15 +26,3 @@ class StorageConnector():
     def conntect_to_container(self, container_name: str) -> ContainerClient:
         container_client = self.blob_service_client.get_container_client(container_name)
         return container_client
-    
-
-    def save_to_cantainer(self, path: str, blob_name: str, container_client: ContainerClient) -> None:
-        file_path = DATA_PATH + path
-
-        try:
-            blob_client = container_client.get_blob_client(blob_name)
-            with open(file_path, "rb") as data:
-                blob_client.upload_blob(data, overwrite=True)
-            self.logger.debug("File uploaded succesfuly!")
-        except Exception as e:
-            self.logger.error(e)

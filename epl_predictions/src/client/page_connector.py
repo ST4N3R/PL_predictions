@@ -3,7 +3,7 @@ import time
 import pandas as pd
 from bs4 import BeautifulSoup
 from typing import Optional
-from ..setup_logging import setup_logging
+from ..utils.setup_logging import setup_logging
 
 
 class PageConnector:

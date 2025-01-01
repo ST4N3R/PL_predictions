@@ -1,7 +1,9 @@
 import pandas as pd
-from ..setup_logging import setup_logging
-from ..config.config import DATA_PATH
+from azure.storage.blob.aio import ContainerClient, BlobServiceClient
+from azure.storage.blob import BlobServiceClient
 from typing import List, Optional
+from .setup_logging import setup_logging
+from ..config.config import DATA_PATH
 
 
 class Saver:
@@ -29,3 +31,12 @@ class Saver:
         
         df = df.drop(cols_to_delete, axis=1)
         return df.to_html(classes=classes, index=index)
+    
+
+    def save_table_to_container(self, df: pd.DataFrame, blob_name: str, container_client: ContainerClient) -> None:
+        try:
+            blob_client = container_client.get_blob_client(blob_name)
+            blob_client.upload_blob(df, overwrite=True)
+            self.logger.debug("File uploaded succesfuly!")
+        except Exception as e:
+            self.logger.error(e)

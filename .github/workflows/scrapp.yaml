@@ -1,0 +1,30 @@
+name: 
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Run every Sunday at midnight
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest # Use the latest version of Ubuntu
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Use the latest version compatible
+
+      - name: Set up Python
+        uses: actions/setup-python@v4 # Use the latest version compatible
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # - name: Run GtR script
+      #   env:
+      #     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      #     AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      #     MY_BUCKET_NAME: ${{ secrets.MY_BUCKET_NAME }}
+      #     DESTINATION_S3_PATH: ${{ secrets.DESTINATION_S3_PATH }}
+      #     ENDPOINT: ${{ matrix.endpoint }}
+      #   run: python discovery_gtr/getters/gtr_to_s3.py
