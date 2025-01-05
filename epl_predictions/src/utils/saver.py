@@ -1,6 +1,5 @@
 import pandas as pd
-from azure.storage.blob.aio import ContainerClient, BlobServiceClient
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob.aio import ContainerClient
 from typing import List, Optional
 from .setup_logging import setup_logging
 from ..config.config import DATA_PATH
