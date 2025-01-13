@@ -6,14 +6,17 @@ from ..utils.setup_logging import setup_logging
 
 class PageScrapper:
 
-    def __init__(self, soup: BeautifulSoup, table_id: str) -> None:
-        self.table_id = table_id
+    def __init__(self, soup: BeautifulSoup, find_table: Optional[str] = None) -> None:
+        self.find_table = find_table
         self.soup = soup
         self.table = None
 
         self.logger = setup_logging()
 
-        self._extract_table_from_page()
+        if self.find_table == None:
+            self._extract_table_with_soup(self.find_table)
+        else:
+            self._extract_table_wiht_id(self.find_table)
 
 
     def _preprocess_table_data(self, tag_table: Optional[Union[Tag, NavigableString]]) -> list:
@@ -31,9 +34,9 @@ class PageScrapper:
         return rows
 
 
-    def _extract_table_from_page(self) -> None:
+    def _extract_table_wiht_id(self, table_id: str) -> None:
         try:        
-            tag_table = self.soup.find("table", {'id': self.table_id})
+            tag_table = self.soup.find("table", {'id': table_id})
         except AttributeError as e:
             self.logger.error(e)
             tag_table = None
@@ -42,6 +45,18 @@ class PageScrapper:
             self.logger.error("Couldn't find the standings table")
 
         self.table = self._preprocess_table_data(tag_table)
+
+
+    def _extract_table_with_soup(self, soup: BeautifulSoup) -> None:
+        rows = []
+
+        for row in soup.find_all("tr"):
+            cols = row.find_all(["th", "td"])
+            if cols:
+                row_data = [col.text.strip() for col in cols]
+                rows.append(row_data)
+
+        self.table = rows
     
 
     def get_table_as_dataframe(self) -> pd.DataFrame:

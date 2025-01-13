@@ -5,6 +5,7 @@ from ..utils.setup_logging import setup_logging
 from ..utils.loader import Loader
 from ..azure_client.storage_connector import StorageConnector
 from ..client.page_connector import PageConnector
+from ..client.page_user import PageUser
 from ..scrappers.page_scrapper import PageScrapper
 
 
@@ -25,8 +26,11 @@ class MatchScrapper:
         return match_report_links
 
 
-    def extract_table(self, page: BeautifulSoup,table_id: str) -> pd.DataFrame:
-        page_scrapper = PageScrapper(page, table_id)
+    def extract_table(self, page: BeautifulSoup, table_xpath: str) -> pd.DataFrame:
+        page_user = PageUser(page)
+        page = page_user.get_element_by_xpath(table_xpath)
+
+        page_scrapper = PageScrapper(page)
 
         return page_scrapper.get_table_as_dataframe()
 
@@ -36,8 +40,8 @@ class MatchScrapper:
             page_connector = PageConnector(url)
             page = page_connector.get_page()
 
-            df_home_team = self.extract_table(page, "...")
-            df_away_team = self.extract_table(page, "...")
+            df_home_team = self.extract_table(page, "/html/body/div[4]/div[4]/div[10]/div[8]/div[1]/table")
+            df_away_team = self.extract_table(page, "/html/body/div[4]/div[4]/div[12]/div[8]/div[1]/table")
 
             self.logger.info(f"Successfuly extracted match report from {url}")
             return (df_home_team, df_away_team)
@@ -47,7 +51,6 @@ class MatchScrapper:
 
 
     def get_match_data(self, df: pd.DataFrame = None):
-        resutlt_df = pd.DataFrame()
         if df is None:
             container_client = StorageConnector()
             container_client.conntect_to_container("raw")
