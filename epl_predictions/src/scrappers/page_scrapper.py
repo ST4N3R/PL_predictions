@@ -1,22 +1,22 @@
+import pandas as pd
 from typing import Optional, Union
 from bs4 import BeautifulSoup, Tag, NavigableString, ResultSet
-import pandas as pd
+from lxml import etree
 from ..utils.setup_logging import setup_logging
 
 
 class PageScrapper:
 
-    def __init__(self, soup: BeautifulSoup, find_table: Optional[str] = None) -> None:
-        self.find_table = find_table
+    def __init__(self, soup: BeautifulSoup, table_id: Optional[str] = None, table_xpath: Optional[str] = None) -> None:
         self.soup = soup
         self.table = None
 
         self.logger = setup_logging()
 
-        if self.find_table == None:
-            self._extract_table_with_soup(self.find_table)
+        if table_id == None and table_xpath != None:
+            self._extract_table_with_xpath(table_xpath)
         else:
-            self._extract_table_wiht_id(self.find_table)
+            self._extract_table_wiht_id(table_id)
 
 
     def _preprocess_table_data(self, tag_table: Optional[Union[Tag, NavigableString]]) -> list:
@@ -47,10 +47,11 @@ class PageScrapper:
         self.table = self._preprocess_table_data(tag_table)
 
 
-    def _extract_table_with_soup(self, soup: BeautifulSoup) -> None:
+    def _extract_table_with_xpath(self, xpath: str) -> None:
+        element_soup = self._find_element_by_xpath(xpath)
         rows = []
 
-        for row in soup.find_all("tr"):
+        for row in element_soup.find_all("tr"):
             cols = row.find_all(["th", "td"])
             if cols:
                 row_data = [col.text.strip() for col in cols]
@@ -59,7 +60,25 @@ class PageScrapper:
         self.table = rows
     
 
+    def _find_element_by_xpath(self, xpath: str) -> BeautifulSoup:
+            try:
+                tree = etree.HTML(str(self.soup))
+                element = tree.xpath(xpath)
+
+                if element:
+                    element_html = etree.tostring(element[0], pretty_print=True).decode()
+                    return BeautifulSoup(element_html, "html.parser")
+                else:
+                    self.logger.error(f"Element not found for XPATH: {xpath}")
+                    return BeautifulSoup()
+                
+            except Exception as e:
+                self.logger.error(f"Error finding element by XPATH {xpath}: {e}")
+                return BeautifulSoup()
+
+
     def get_table_as_dataframe(self) -> pd.DataFrame:
+        return self.table
         if self.table == []:
             return pd.DataFrame()
         

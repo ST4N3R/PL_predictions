@@ -27,10 +27,11 @@ class MatchScrapper:
 
 
     def extract_table(self, page: BeautifulSoup, table_xpath: str) -> pd.DataFrame:
+        #ToDo: Move PageUser to PageScrapper
         page_user = PageUser(page)
         page = page_user.get_element_by_xpath(table_xpath)
 
-        page_scrapper = PageScrapper(page)
+        page_scrapper = PageScrapper(page, table_xpath=table_xpath)
 
         return page_scrapper.get_table_as_dataframe()
 
