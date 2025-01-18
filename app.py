@@ -1,10 +1,6 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
-from epl_predictions.src.scrappers.results_scrapper import ResultsScrapper
-from epl_predictions.src.scrappers.league_table_scrapper import LeagueTableScrapper
-from epl_predictions.src.utils.saver import Saver
-from epl_predictions.src.config.config import LAST_SCRAPPED_MATCH_DATE, LAST_SCRAPPED_MATCH_HOUR
 
 #ToDo: Add update option, to ResultsScrapper
 

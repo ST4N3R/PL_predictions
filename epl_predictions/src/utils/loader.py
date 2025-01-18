@@ -29,6 +29,8 @@ class Loader():
             content = stream_downloader.readall()
 
             df = pd.read_csv(io.StringIO(content.decode('utf-8')))
+            df = df.set_index('index', drop=True)
+
             self.logger.debug("File downloaded successfully!")
             
             return df

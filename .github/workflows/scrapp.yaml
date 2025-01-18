@@ -20,11 +20,5 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # - name: Run GtR script
-      #   env:
-      #     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      #     AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-      #     MY_BUCKET_NAME: ${{ secrets.MY_BUCKET_NAME }}
-      #     DESTINATION_S3_PATH: ${{ secrets.DESTINATION_S3_PATH }}
-      #     ENDPOINT: ${{ matrix.endpoint }}
-      #   run: python discovery_gtr/getters/gtr_to_s3.py
+      - name: Run scrapper
+        run: python scrapper.py
