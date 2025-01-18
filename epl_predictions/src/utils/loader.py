@@ -10,10 +10,10 @@ class Loader():
         self.logger = setup_logging()
 
 
-    def load_table_from_file(self, name: str) -> pd.DataFrame:
+    def load_table_from_file(self, path: str) -> pd.DataFrame:
         try:
-            df = pd.read_csv(DATA_PATH + f"raw/{name}.csv")
-            self.logger.debug(f"File {name} loaded successfully")
+            df = pd.read_csv(DATA_PATH + path)
+            self.logger.debug(f"File loaded successfully")
             return df
         except Exception as e:
             self.logger.error(e)

@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import streamlit as st
 from epl_predictions.src.scrappers.results_scrapper import ResultsScrapper
 from epl_predictions.src.scrappers.league_table_scrapper import LeagueTableScrapper
 from epl_predictions.src.utils.saver import Saver
@@ -38,5 +39,8 @@ def test_files():
     # container = sc.conntect_to_container("raw")
     # sc.save_to_cantainer("/raw/results.csv", "results.csv", container)
 
+dashboard_page = st.Page("pages/dashboard.py", title="Dashboard")
+data_page = st.Page("pages/data.py", title="Data")
 
-print(LAST_SCRAPPED_MATCH_DATE)
+pg = st.navigation([dashboard_page, data_page])
+pg.run()
