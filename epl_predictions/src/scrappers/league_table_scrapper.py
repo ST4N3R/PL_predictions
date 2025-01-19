@@ -25,8 +25,8 @@ class LeagueTableScrapper:
         table_id = "results2024-202591_overall"
 
         try:
-            current_df = self._extract_league_table(url, table_id)
-            current_df = current_df.reset_index()
+            current_df = self._extract_league_table(url, table_id=table_id)
+            current_df = current_df.reset_index(drop=True)
 
             self.logger.info(f"Successfuly scraped the current league table")
             return current_df

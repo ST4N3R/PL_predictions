@@ -53,8 +53,8 @@ class Saver:
         return combined_df
 
 
-    def save_table_to_container(self, df: pd.DataFrame, blob_name: str, container_client: ContainerClient) -> None:
-        if self._check_blob_instance(container_client, blob_name):
+    def save_table_to_container(self, df: pd.DataFrame, blob_name: str, container_client: ContainerClient, override: bool = False) -> None:
+        if ~override and self._check_blob_instance(container_client, blob_name):
             df = self._combine_new_and_old_blob(df, container_client, blob_name)
 
         try:

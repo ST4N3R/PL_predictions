@@ -35,8 +35,8 @@ def test_files():
     # container = sc.conntect_to_container("raw")
     # sc.save_to_cantainer("/raw/results.csv", "results.csv", container)
 
-dashboard_page = st.Page("pages/dashboard.py", title="Dashboard")
-data_page = st.Page("pages/data.py", title="Data")
+dashboard_page = st.Page("epl_predictions/pages/dashboard.py", title="Dashboard")
+data_page = st.Page("epl_predictions/pages/data.py", title="Data")
 
 pg = st.navigation([dashboard_page, data_page])
 pg.run()

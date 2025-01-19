@@ -78,7 +78,6 @@ class PageScrapper:
 
 
     def get_table_as_dataframe(self) -> pd.DataFrame:
-        return self.table
         if self.table == []:
             return pd.DataFrame()
         
