@@ -1,7 +1,6 @@
 import pandas as pd
 from typing import Optional, Union
 from bs4 import BeautifulSoup, Tag, NavigableString, ResultSet
-from lxml import etree
 from ..utils.setup_logging import setup_logging
 
 
@@ -47,17 +46,18 @@ class PageScrapper:
         self.table = self._preprocess_table_data(tag_table)
 
 
-    def _extract_table_with_xpath(self, xpath: str) -> None:
-        element_soup = self._find_element_by_xpath(xpath)
-        rows = []
+    #ToDo: Change it, so it won't use xmlx
+    # def _extract_table_with_xpath(self, xpath: str) -> None:
+    #     element_soup = self._find_element_by_xpath(xpath)
+    #     rows = []
 
-        for row in element_soup.find_all("tr"):
-            cols = row.find_all(["th", "td"])
-            if cols:
-                row_data = [col.text.strip() for col in cols]
-                rows.append(row_data)
+    #     for row in element_soup.find_all("tr"):
+    #         cols = row.find_all(["th", "td"])
+    #         if cols:
+    #             row_data = [col.text.strip() for col in cols]
+    #             rows.append(row_data)
 
-        self.table = rows
+    #     self.table = rows
     
 
     def _find_element_by_xpath(self, xpath: str) -> BeautifulSoup:

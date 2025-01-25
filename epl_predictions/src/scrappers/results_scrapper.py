@@ -55,6 +55,7 @@ class ResultsScrapper:
         return df
 
 
+    #ToDo: Add changing day string to int
     def _preprocess_fixtures_df(self, df: pd.DataFrame, soup: BeautifulSoup) -> pd.DataFrame:
         df = self._remove_all_null_rows(df)
         df = self._change_xG_columns_names(df)

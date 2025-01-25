@@ -24,7 +24,7 @@ def get_current_league_table() -> pd.DataFrame:
 
     # upload_df_to_blob(spark_df, "final", "current_table.csv", True)
 
-    return df
+    # return df
 
 
 # def get_fixtures() -> Tuple[pd.DataFrame, pd.DataFrame]:
